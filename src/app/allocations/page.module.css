@@ -1,0 +1,137 @@
+.container {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+}
+
+.title h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.statsRow {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+.statCard {
+    background: white;
+    padding: 20px;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    border: 1px solid var(--border-light);
+}
+
+.statValue {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.statLabel {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.mainArea {
+    background: white;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    border: 1px solid var(--border-light);
+}
+
+.toolbar {
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #FAFAFA;
+}
+
+.filters {
+    display: flex;
+    gap: 12px;
+}
+
+.filterBtn {
+    padding: 8px 16px;
+    border: 1px solid var(--border-light);
+    background: white;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.filterBtnActive {
+    background: var(--primary-light);
+    color: white;
+    border-color: var(--primary-light);
+}
+
+.list {
+    padding: 0;
+}
+
+.listItem {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr 1fr 1fr;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border-light);
+    align-items: center;
+    transition: background 0.2s;
+}
+
+.listItem:hover {
+    background: #F9FAFB;
+}
+
+.colHeader {
+    font-weight: 600;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+}
+
+.tag {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: #eee;
+}
+
+.high {
+    background: #FEF2F2;
+    color: #DC2626;
+}
+
+.med {
+    background: #FFF7ED;
+    color: #EA580C;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

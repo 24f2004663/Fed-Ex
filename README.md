@@ -1,36 +1,50 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# FedEx Smart Recovery - DCA Management Platform
 
-## Getting Started
+## 🚀 Solution Overview
+The **FedEx Smart Recovery** platform is a centralized, AI-powered system designed to reimagine the end-to-end management of Debt Collection Agencies (DCAs). It addresses the core challenges of fragmentation, manual tracking, and lack of visibility by providing a unified, transparent, and intelligent interface.
 
-First, run the development server:
+### 🔑 Key Features
+1.  **Smart Allocation Engine (AI)**: Uses a dedicated **Random Forest ML Model** to prioritize cases and automatically assign them to agencies based on "Propensity to Pay".
+2.  **Real-Time Executive Dashboard**: Provides instant visibility into recovery rates and agency performance.
+3.  **Agency Performance Network**: A transparent scorecard system to benchmark DCAs.
+4.  **Governance & Compliance**: Centralized SOP enforcement and audit trails.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🛠 Tech Stack
+### Frontend (The Dashboard)
+-   **Framework**: Next.js 14 (React)
+-   **Styling**: Premium Vanilla CSS (Glassmorphism design)
+-   **Language**: TypeScript
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Backend (The Intelligence)
+-   **Language**: Python
+-   **ML Library**: Scikit-Learn (Random Forest)
+-   **Logic**: Auto-generation of synthetic training data -> Model Training -> Inference
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🧠 AI Engine
+This project includes a fully functional Python ML prototype in the `ai_engine/` directory.
+-   Run `python ai_engine/model_train.py` to generate data and train the model.
+-   Run `python ai_engine/inference.py` to see the model predict live outcomes for new cases.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📦 Deliverables Mapping
+| Problem Statement Requirement | Solution Feature |
+|-------------------------------|------------------|
+| Centralize case allocation | **frontend/Allocations Module** |
+| Real-time dashboards | **frontend/Executive Dashboard** |
+| **AI/ML Models** | **ai_engine/model_train.py** & **inference.py** |
+| Workflow Automation | **ai_engine/inference.py** (Contains logic for Auto-Allocation) |
+| Secure Roles | **frontend/Agencies Portal** (Simulated) |
 
-## Learn More
+## 🏃‍♂️ How to Run
+1.  **Start Frontend**:
+    ```bash
+    npm run dev
+    ```
+    Open [http://localhost:3000](http://localhost:3000).
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+2.  **Test AI Model**:
+    ```bash
+    cd ai_engine
+    pip install -r requirements.txt
+    python model_train.py
+    python inference.py
+    ```
