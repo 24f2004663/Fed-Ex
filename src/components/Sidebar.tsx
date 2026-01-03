@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { LayoutDashboard, Users, PieChart, Briefcase, Settings, LogOut, ShieldCheck } from 'lucide-react';
+import { LayoutDashboard, Users, PieChart, Briefcase, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import styles from './Sidebar.module.css';
@@ -39,16 +39,7 @@ export default function Sidebar() {
         })}
       </nav>
 
-      <div className={styles.footer}>
-        <button className={styles.navItem} style={{ width: '100%' }}>
-          <Settings size={20} className={styles.icon} />
-          <span>Settings</span>
-        </button>
-        <button className={styles.navItem} style={{ width: '100%', marginTop: '8px', color: '#EF4444' }}>
-          <LogOut size={20} className={styles.icon} />
-          <span>Logout</span>
-        </button>
-      </div>
+
     </aside>
   );
 }
