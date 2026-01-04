@@ -1,19 +1,83 @@
-import React from 'react';
-import { DollarSign, Activity, Users, Clock, Filter, Download, AlertTriangle, ArrowRight } from 'lucide-react';
+'use client';
+
+import React, { useState } from 'react';
+import { DollarSign, Activity, Users, Clock, Filter, Download, AlertTriangle, ArrowRight, TrendingUp } from 'lucide-react';
 import MetricCard from '@/components/MetricCard';
 import styles from './page.module.css';
 
-export default function Dashboard() {
+import Modal from '@/components/Modal';
+
+export default function Home() {
+  const [duration, setDuration] = useState('Last 30 Days');
+  const [showEscalateModal, setShowEscalateModal] = useState(false);
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+
+  const handleEscalateClick = () => setShowEscalateModal(true);
+
+  const confirmEscalation = () => {
+    setShowEscalateModal(false);
+    setShowSuccessModal(true);
+  };
+
+  const handleViewDetails = () => setShowDetailsModal(true);
+
   return (
     <div className="animate-fade-in">
-      <header className={styles.header}>
-        <div className={styles.heading}>
-          <h1>Executive Dashboard</h1>
-          <p>Real-time overview of debt recovery performance.</p>
+      <Modal
+        isOpen={showEscalateModal}
+        onClose={() => setShowEscalateModal(false)}
+        onConfirm={confirmEscalation}
+        title="Confirm Legal Escalation"
+        confirmText="Yes, Escalate"
+        type="warning"
+      >
+        <p>You are about to flag <strong>3 accounts ($450,000)</strong> for immediate legal action.</p>
+        <p style={{ marginTop: 12 }}>This will notify the extensive legal team and update the case status to 'Legal Review'.</p>
+        <p style={{ marginTop: 12 }}>Proceed with escalation?</p>
+      </Modal>
+
+      <Modal
+        isOpen={showDetailsModal}
+        onClose={() => setShowDetailsModal(false)}
+        title="Case Details View"
+        confirmText="Go to Case Management"
+        onConfirm={() => setShowDetailsModal(false)}
+        cancelText="Close"
+        type="info"
+      >
+        <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <li style={{ padding: 12, background: '#F9FAFB', borderRadius: 8 }}>
+            <strong>Acme Corp</strong> - $150,000 (SOL in 5 days)
+          </li>
+          <li style={{ padding: 12, background: '#F9FAFB', borderRadius: 8 }}>
+            <strong>Beta Industries</strong> - $200,000 (SOL in 2 days)
+          </li>
+          <li style={{ padding: 12, background: '#F9FAFB', borderRadius: 8 }}>
+            <strong>Delta Co</strong> - $100,000 (SOL in 7 days)
+          </li>
+        </ul>
+      </Modal>
+
+      <Modal
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+        title="Escalation Submitted"
+        confirmText="OK"
+        onConfirm={() => setShowSuccessModal(false)}
+        type="success"
+      >
+        Escalation request has been successfully queued. The legal team has been notified via secure channel.
+      </Modal>
+      {/* Header */}
+      <div className={styles.header}>
+        <div>
+          <h1 style={{ fontSize: '1.8rem', fontWeight: 700, marginBottom: 8 }}>Executive Dashboard</h1>
+          <p style={{ color: 'var(--text-muted)' }}>Real-time overview of debt recovery performance.</p>
         </div>
-        <div className={styles.actions}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginRight: 16, padding: '6px 12px', background: '#ECFDF5', borderRadius: 8, color: '#047857', fontSize: '0.85rem', fontWeight: 600 }}>
-            <div style={{ width: 8, height: 8, background: '#10B981', borderRadius: '50%' }} />
+        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+          <div className={styles.rpaBadge}>
+            <div className={styles.pulseDot}></div>
             RPA Adapter: Active
           </div>
           <button className="btn btn-secondary">
@@ -25,7 +89,7 @@ export default function Dashboard() {
             Export Report
           </button>
         </div>
-      </header>
+      </div>
 
       {/* CRITICAL ALERT SECTION - Handling "Rising Escalations" Pain Point */}
       <div className={styles.alertBanner}>
@@ -36,11 +100,11 @@ export default function Dashboard() {
           <h3>Critical Escalation: 3 High-Value Accounts at Risk</h3>
           <p>Accounts totaling <strong>$450,000</strong> are approaching the Statute of Limitations (SOL) in 7 days. AI recommends immediate legal escalation to prevent write-off.</p>
           <div className={styles.alertActions}>
-            <button className={styles.btnAlert}>
+            <button className={styles.btnAlert} onClick={handleEscalateClick}>
               Escalate to Legal
               <ArrowRight size={16} style={{ marginLeft: 6, display: 'inline-block', verticalAlign: 'middle' }} />
             </button>
-            <button className={styles.btnAlertSecondary}>View Details</button>
+            <button className={styles.btnAlertSecondary} onClick={handleViewDetails}>View Details</button>
           </div>
         </div>
       </div>
@@ -131,25 +195,35 @@ export default function Dashboard() {
 
           {/* Solution Highlight - Real-time Chart Placeholder */}
           <div className={styles.card}>
-            <div className={styles.cardTitle}>
-              <span>Recovery Trends (Live)</span>
-              <select style={{ padding: 6, borderRadius: 6, border: '1px solid #ddd' }}>
+            <div className={styles.sectionHeader}>
+              <h2>Recovery Trends (Live)</h2>
+              <select
+                className={styles.select}
+                value={duration}
+                onChange={(e) => {
+                  setDuration(e.target.value);
+                  alert(`📉 Data Refreshing...\n\nUpdating trend analysis for: ${e.target.value}`);
+                }}
+              >
                 <option>Last 30 Days</option>
-                <option>This Quarter</option>
+                <option>Last Quarter</option>
+                <option>YTD</option>
               </select>
             </div>
-            {/* Simple CSS Chart Graphic */}
-            <div style={{ height: '200px', display: 'flex', alignItems: 'flex-end', gap: '12px', padding: '0 10px' }}>
-              {[40, 60, 45, 70, 55, 65, 80, 75, 90, 60, 85, 95].map((h, i) => (
-                <div key={i} style={{
-                  flex: 1,
-                  background: i === 11 ? 'var(--primary)' : 'var(--primary-light)',
-                  opacity: i === 11 ? 1 : 0.4,
-                  height: `${h}%`,
-                  borderRadius: '4px 4px 0 0',
-                  transition: 'all 0.3s'
-                }} />
-              ))}
+            <div className={styles.chartPlaceholder}>
+              {/* Dynamic visual feedback based on duration state */}
+              <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', height: '100%', paddingBottom: 20 }}>
+                {[35, 55, 40, 60, 45, 75, 65, 85, 60, 80, 70].map((h, i) => (
+                  <div key={i} style={{
+                    width: '6%',
+                    height: `${duration === 'Last Quarter' ? h * 0.8 : h}%`, // Simple visual change simulation
+                    background: i === 10 ? '#4D148C' : '#C4B5FD',
+                    borderRadius: 4,
+                    transition: 'height 0.5s ease'
+                  }}></div>
+                ))}
+                <div style={{ width: '6%', height: '90%', background: '#4D148C', borderRadius: 4 }}></div>
+              </div>
             </div>
           </div>
         </div>

@@ -1,18 +1,72 @@
+'use client';
+
 import React from 'react';
-import { ShieldCheck, FileText } from 'lucide-react';
+import { ShieldCheck, FileText, Filter, Download } from 'lucide-react';
+import styles from './page.module.css';
+
+import Modal from '@/components/Modal';
 
 export default function CompliancePage() {
+    const [showFilterModal, setShowFilterModal] = React.useState(false);
+    const [showExportModal, setShowExportModal] = React.useState(false);
+
     return (
         <div className="animate-fade-in">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32 }}>
+            <Modal
+                isOpen={showFilterModal}
+                onClose={() => setShowFilterModal(false)}
+                title="Active Filters"
+                type="info"
+                confirmText="Apply Filters"
+                onConfirm={() => setShowFilterModal(false)}
+            >
                 <div>
-                    <h1 style={{ fontSize: '1.8rem', fontWeight: 700, marginBottom: 8 }}>Governance & Compliance</h1>
-                    <p style={{ color: 'var(--text-muted)' }}>Audit trails, SOP enforcement, and regulatory adherence.</p>
+                    <p>Currently showing logs for:</p>
+                    <div style={{ marginTop: 12, padding: 12, background: '#F3F4F6', borderRadius: 8, fontWeight: 500 }}>
+                        📅 Last 30 Days
+                    </div>
                 </div>
-                <button className="btn btn-secondary">
-                    <ShieldCheck size={18} style={{ marginRight: 8 }} />
-                    Download Audit Report
-                </button>
+            </Modal>
+
+            <Modal
+                isOpen={showExportModal}
+                onClose={() => setShowExportModal(false)}
+                title="Exporting Report..."
+                type="success"
+                confirmText="Download"
+                onConfirm={() => setShowExportModal(false)}
+            >
+                <p>Generating PDF Audit Trail... 100%</p>
+                <div style={{ marginTop: 16, display: 'flex', alignItems: 'center', gap: 12 }}>
+                    <FileText size={32} color="#4D148C" />
+                    <div>
+                        <div style={{ fontWeight: 600 }}>Compliance_Audit_Log_2026.pdf</div>
+                        <div style={{ fontSize: '0.8rem', color: '#6B7280' }}>2.4 MB • Generated just now</div>
+                    </div>
+                </div>
+            </Modal>
+
+            <div className={styles.header}>
+                <div className={styles.title}>
+                    <h1>Compliance & Governance</h1>
+                    <p style={{ color: 'var(--text-muted)' }}>Audit trails and regulatory adherence logs.</p>
+                </div>
+                <div style={{ display: 'flex', gap: 12 }}>
+                    <button
+                        className="btn btn-secondary"
+                        onClick={() => setShowFilterModal(true)}
+                    >
+                        <Filter size={18} style={{ marginRight: 8 }} />
+                        Filter
+                    </button>
+                    <button
+                        className="btn btn-primary"
+                        onClick={() => setShowExportModal(true)}
+                    >
+                        <Download size={18} style={{ marginRight: 8 }} />
+                        Export Report
+                    </button>
+                </div>
             </div>
 
             <div style={{ background: 'white', borderRadius: 16, border: '1px solid var(--border-light)', overflow: 'hidden' }}>

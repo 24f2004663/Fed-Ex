@@ -1,12 +1,48 @@
 'use client';
 
-import React from 'react';
-import { Star, MoreHorizontal, Phone, Mail } from 'lucide-react';
+import React, { useState } from 'react';
+import { Star, MoreHorizontal, Phone, Mail, Lock } from 'lucide-react';
 import styles from './page.module.css';
+import Modal from '@/components/Modal';
 
 export default function AgenciesPage() {
+    const [showChatModal, setShowChatModal] = useState(false);
+    const [selectedAgency, setSelectedAgency] = useState('');
+
+    const openChat = (agencyName: string) => {
+        setSelectedAgency(agencyName);
+        setShowChatModal(true);
+    };
+
     return (
         <div className="animate-fade-in">
+            <Modal
+                isOpen={showChatModal}
+                onClose={() => setShowChatModal(false)}
+                title={`Secure Chat: ${selectedAgency}`}
+                confirmText="Send Message"
+                onConfirm={() => setShowChatModal(false)}
+                type="info"
+            >
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16, color: '#059669', fontSize: '0.9rem', background: '#ECFDF5', padding: '8px 12px', borderRadius: 8 }}>
+                    <Lock size={16} />
+                    End-to-end encrypted channel
+                </div>
+                <p>Starting session with <strong>{selectedAgency}</strong>...</p>
+                <textarea
+                    placeholder="Type your message here..."
+                    style={{
+                        width: '100%',
+                        marginTop: 12,
+                        padding: 12,
+                        border: '1px solid #ddd',
+                        borderRadius: 8,
+                        minHeight: 100,
+                        fontFamily: 'inherit'
+                    }}
+                />
+            </Modal>
+
             <div style={{ marginBottom: 32 }}>
                 <h1 style={{ fontSize: '1.8rem', fontWeight: 700, marginBottom: 8 }}>Agency Performance Network</h1>
                 <p style={{ color: 'var(--text-muted)' }}>Monitor and benchmark external debt collection partners.</p>
@@ -36,7 +72,7 @@ export default function AgenciesPage() {
                             </div>
                             <div style={{ display: 'flex', gap: 8 }}>
                                 <button
-                                    onClick={() => alert("💬 Opening Secure Channel\n\nStarting encrypted chat session with this agency...")}
+                                    onClick={() => openChat(vendor.name)}
                                     style={{
                                         background: '#EEF2FF',
                                         color: '#4F46E5',
