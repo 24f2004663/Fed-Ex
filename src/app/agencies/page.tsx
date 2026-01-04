@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { Star, MoreHorizontal, Phone, Mail } from 'lucide-react';
 import styles from './page.module.css';
