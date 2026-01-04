@@ -1,8 +1,27 @@
+'use client';
+
 import React from 'react';
 import { Play, CheckCircle, BarChart2, Filter } from 'lucide-react';
 import styles from './page.module.css';
 
 export default function AllocationsPage() {
+    const [isAllocating, setIsAllocating] = React.useState(false);
+
+    const handleAllocation = () => {
+        // SOP Enforcement Logic Simulation
+        const confirm = window.confirm(
+            "🛡️ SOP ENFORCEMENT CHECK\n\nSystem will verify compliance for 542 cases before allocation.\n\n- Check 1: Debt Verification (Passed)\n- Check 2: Customer Cool-off Period (Passed)\n- Check 3: Agency Capacity (Passed)\n\nProceed with AI Allocation?"
+        );
+
+        if (confirm) {
+            setIsAllocating(true);
+            setTimeout(() => {
+                alert("✅ Allocation Complete!\n\nAll cases assigned based on AI Propensity Score.");
+                setIsAllocating(false);
+            }, 1000);
+        }
+    };
+
     return (
         <div className={styles.container}>
             <div className={styles.header}>
@@ -10,9 +29,13 @@ export default function AllocationsPage() {
                     <h1>Case Allocation Manager</h1>
                     <p style={{ color: 'var(--text-muted)' }}>Distribution of overdue accounts to external agencies.</p>
                 </div>
-                <button className="btn btn-primary">
+                <button
+                    className="btn btn-primary"
+                    onClick={handleAllocation}
+                    disabled={isAllocating}
+                >
                     <Play size={18} style={{ marginRight: 8 }} />
-                    Run Auto-Allocation
+                    {isAllocating ? 'Verifying SOPs...' : 'Run Auto-Allocation'}
                 </button>
             </div>
 

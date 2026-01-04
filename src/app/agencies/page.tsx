@@ -32,9 +32,29 @@ export default function AgenciesPage() {
                                     </div>
                                 </div>
                             </div>
-                            <button style={{ background: 'transparent', border: 'none', cursor: 'pointer', height: 'fit-content' }}>
-                                <MoreHorizontal color="var(--text-muted)" />
-                            </button>
+                            <div style={{ display: 'flex', gap: 8 }}>
+                                <button
+                                    onClick={() => alert("💬 Opening Secure Channel\n\nStarting encrypted chat session with this agency...")}
+                                    style={{
+                                        background: '#EEF2FF',
+                                        color: '#4F46E5',
+                                        border: 'none',
+                                        padding: '6px 12px',
+                                        borderRadius: '6px',
+                                        fontSize: '0.8rem',
+                                        fontWeight: 600,
+                                        cursor: 'pointer',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: 6
+                                    }}
+                                >
+                                    Chat
+                                </button>
+                                <button style={{ background: 'transparent', border: 'none', cursor: 'pointer', height: 'fit-content' }}>
+                                    <MoreHorizontal color="var(--text-muted)" />
+                                </button>
+                            </div>
                         </div>
 
                         <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 16 }}>
