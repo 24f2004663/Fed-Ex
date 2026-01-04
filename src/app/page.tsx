@@ -1,13 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
-import { DollarSign, Activity, Users, Clock, Filter, Download, AlertTriangle, ArrowRight, TrendingUp } from 'lucide-react';
+import { DollarSign, Activity, Users, Clock, Filter, Download, AlertTriangle, ArrowRight, TrendingUp, Archive, Database, Server } from 'lucide-react';
 import MetricCard from '@/components/MetricCard';
 import styles from './page.module.css';
-
 import Modal from '@/components/Modal';
+import { useData } from '@/context/DataContext';
 
 export default function Home() {
+  const { metrics, cases, agencies, currentDataset, isLoading, loadData } = useData();
   const [duration, setDuration] = useState('Last 30 Days');
   const [showEscalateModal, setShowEscalateModal] = useState(false);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
@@ -22,6 +23,55 @@ export default function Home() {
 
   const handleViewDetails = () => setShowDetailsModal(true);
 
+  if (isLoading) {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '80vh', gap: 24 }}>
+        <div className="spinner" style={{ width: 48, height: 48, border: '4px solid #f3f3f3', borderTop: '4px solid #4D148C', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
+        <div style={{ color: 'var(--text-muted)', fontSize: '1.2rem' }}>Connecting to FedEx Data Warehouse...</div>
+        <style jsx>{`
+                @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+             `}</style>
+      </div>
+    );
+  }
+
+  // --- EMPTY STATE VIEW ---
+  if (currentDataset === 'empty') {
+    return (
+      <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '80vh', textAlign: 'center', maxWidth: 600, margin: '0 auto' }}>
+        <div style={{ background: 'white', padding: 40, borderRadius: 24, boxShadow: 'var(--shadow-md)', width: '100%' }}>
+          <div style={{ background: '#F3F4F6', width: 80, height: 80, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>
+            <Server size={40} color="#4D148C" />
+          </div>
+          <h1 style={{ fontSize: '2rem', fontWeight: 700, marginBottom: 16, color: '#1F2937' }}>Welcome to FedEx DCA Manager</h1>
+          <p style={{ color: '#6B7280', fontSize: '1.1rem', marginBottom: 32, lineHeight: 1.6 }}>
+            The system is currently connected but no dataset is loaded. Please select a demo scenario to visualize live case allocations and AI predictions.
+          </p>
+
+          <div style={{ display: 'flex', gap: 16, flexDirection: 'column' }}>
+            <button
+              onClick={() => loadData('set1')}
+              className="btn btn-primary"
+              style={{ padding: '16px', fontSize: '1.1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12 }}
+            >
+              <Database size={20} />
+              Load Live Data: Scenario A (Corporate)
+            </button>
+            <button
+              onClick={() => loadData('set2')}
+              className="btn btn-secondary"
+              style={{ padding: '16px', fontSize: '1.1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, border: '2px solid #E5E7EB' }}
+            >
+              <Database size={20} />
+              Load Live Data: Scenario B (Retail)
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // --- FILLED DASHBOARD VIEW ---
   return (
     <div className="animate-fade-in">
       <Modal
@@ -32,7 +82,7 @@ export default function Home() {
         confirmText="Yes, Escalate"
         type="warning"
       >
-        <p>You are about to flag <strong>3 accounts ($450,000)</strong> for immediate legal action.</p>
+        <p>You are about to flag <strong>3 accounts</strong> for immediate legal action.</p>
         <p style={{ marginTop: 12 }}>This will notify the extensive legal team and update the case status to 'Legal Review'.</p>
         <p style={{ marginTop: 12 }}>Proceed with escalation?</p>
       </Modal>
@@ -46,17 +96,7 @@ export default function Home() {
         cancelText="Close"
         type="info"
       >
-        <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 12 }}>
-          <li style={{ padding: 12, background: '#F9FAFB', borderRadius: 8 }}>
-            <strong>Acme Corp</strong> - $150,000 (SOL in 5 days)
-          </li>
-          <li style={{ padding: 12, background: '#F9FAFB', borderRadius: 8 }}>
-            <strong>Beta Industries</strong> - $200,000 (SOL in 2 days)
-          </li>
-          <li style={{ padding: 12, background: '#F9FAFB', borderRadius: 8 }}>
-            <strong>Delta Co</strong> - $100,000 (SOL in 7 days)
-          </li>
-        </ul>
+        <p>Viewing details for the current active dataset.</p>
       </Modal>
 
       <Modal
@@ -69,6 +109,7 @@ export default function Home() {
       >
         Escalation request has been successfully queued. The legal team has been notified via secure channel.
       </Modal>
+
       {/* Header */}
       <div className={styles.header}>
         <div>
@@ -91,50 +132,52 @@ export default function Home() {
         </div>
       </div>
 
-      {/* CRITICAL ALERT SECTION - Handling "Rising Escalations" Pain Point */}
-      <div className={styles.alertBanner}>
-        <div className={styles.alertIcon}>
-          <AlertTriangle size={24} />
-        </div>
-        <div className={styles.alertContent}>
-          <h3>Critical Escalation: 3 High-Value Accounts at Risk</h3>
-          <p>Accounts totaling <strong>$450,000</strong> are approaching the Statute of Limitations (SOL) in 7 days. AI recommends immediate legal escalation to prevent write-off.</p>
-          <div className={styles.alertActions}>
-            <button className={styles.btnAlert} onClick={handleEscalateClick}>
-              Escalate to Legal
-              <ArrowRight size={16} style={{ marginLeft: 6, display: 'inline-block', verticalAlign: 'middle' }} />
-            </button>
-            <button className={styles.btnAlertSecondary} onClick={handleViewDetails}>View Details</button>
+      {/* CRITICAL ALERT SECTION - Only show if corporate data (Scenario A) for now, or always show if needed */}
+      {currentDataset === 'set1' && (
+        <div className={styles.alertBanner}>
+          <div className={styles.alertIcon}>
+            <AlertTriangle size={24} />
+          </div>
+          <div className={styles.alertContent}>
+            <h3>Critical Escalation: 3 High-Value Accounts at Risk</h3>
+            <p>Accounts totaling <strong>$450,000</strong> are approaching the Statute of Limitations (SOL) in 7 days. AI recommends immediate legal escalation to prevent write-off.</p>
+            <div className={styles.alertActions}>
+              <button className={styles.btnAlert} onClick={handleEscalateClick}>
+                Escalate to Legal
+                <ArrowRight size={16} style={{ marginLeft: 6, display: 'inline-block', verticalAlign: 'middle' }} />
+              </button>
+              <button className={styles.btnAlertSecondary} onClick={handleViewDetails}>View Details</button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Metrics Grid */}
       <div className={styles.grid}>
         <MetricCard
           title="Total Recovered (Q4)"
-          value="$1,245,000"
+          value={metrics.totalRecovered}
           change="12.5%"
-          trend="up"
+          trend={metrics.trendRecovered as 'up' | 'down'}
           icon={DollarSign}
         />
         <MetricCard
           title="Active Allocations"
-          value="1,432"
+          value={metrics.activeAllocations}
           change="3.2%"
-          trend="up"
+          trend={metrics.trendAllocations as 'up' | 'down'}
           icon={Activity}
         />
         <MetricCard
           title="Avg. Recovery Time"
-          value="14 Days"
+          value={metrics.avgTime}
           change="2 Days"
           trend="up"
           icon={Clock}
         />
         <MetricCard
           title="Agency Efficiency"
-          value="87.4%"
+          value={metrics.efficiency}
           change="1.1%"
           trend="down"
           icon={Users}
@@ -164,16 +207,11 @@ export default function Home() {
                   </tr>
                 </thead>
                 <tbody>
-                  {[
-                    { id: 'CX-9921', name: 'TechFlow Sys', amt: '$12,400', score: 98, agency: 'Alpha Corp' },
-                    { id: 'CX-8832', name: 'Global Logistics', amt: '$4,500', score: 94, agency: 'SwiftRecover' },
-                    { id: 'CX-7721', name: 'MediCare Inc', amt: '$8,900', score: 89, agency: 'Alpha Corp' },
-                    { id: 'CX-3321', name: 'RetailGiant', amt: '$22,100', score: 85, agency: 'LegalPoint' },
-                  ].map((row) => (
+                  {cases.map((row) => (
                     <tr key={row.id}>
                       <td style={{ fontWeight: 500 }}>{row.id}</td>
                       <td>{row.name}</td>
-                      <td>{row.amt}</td>
+                      <td>{row.amountStr}</td>
                       <td>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                           <span style={{ color: 'var(--success)', fontWeight: 600 }}>{row.score}%</span>
@@ -182,7 +220,7 @@ export default function Home() {
                           </div>
                         </div>
                       </td>
-                      <td>{row.agency}</td>
+                      <td>{row.rec.split('(')[0]}</td>
                       <td>
                         <button className="btn btn-secondary" style={{ padding: '4px 12px', fontSize: '0.8rem' }}>Allocate</button>
                       </td>
@@ -202,7 +240,6 @@ export default function Home() {
                 value={duration}
                 onChange={(e) => {
                   setDuration(e.target.value);
-                  alert(`📉 Data Refreshing...\n\nUpdating trend analysis for: ${e.target.value}`);
                 }}
               >
                 <option>Last 30 Days</option>
@@ -235,48 +272,20 @@ export default function Home() {
           <div className={styles.card}>
             <div className={styles.cardTitle}>Top Agencies</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              {[
-                { name: 'Alpha Recoveries', perf: 92, cases: 420 },
-                { name: 'Swift Collect', perf: 81, cases: 310 },
-                { name: 'LegalPoint Solutions', perf: 74, cases: 150 },
-                { name: 'Global Debt Mgmt', perf: 65, cases: 210 },
-              ].map((agency) => (
+              {agencies.map((agency) => (
                 <div key={agency.name}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
                     <span style={{ fontWeight: 500, fontSize: '0.9rem' }}>{agency.name}</span>
-                    <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>{agency.perf}% Rate</span>
+                    <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>{agency.rating}/5.0</span>
                   </div>
+                  {/* Reuse Agency Logic for progress bar visual */}
                   <div className={styles.progressBarContainer}>
-                    <div className={styles.progressBar} style={{ width: `${agency.perf}%`, backgroundColor: agency.perf > 80 ? 'var(--success)' : (agency.perf > 70 ? 'var(--warning)' : 'var(--danger)') }} />
+                    <div className={styles.progressBar} style={{ width: `${(agency.rating / 5) * 100}%`, backgroundColor: agency.rating > 4.0 ? 'var(--success)' : (agency.rating > 3.0 ? 'var(--warning)' : 'var(--danger)') }} />
                   </div>
                 </div>
               ))}
             </div>
           </div>
-
-          {/* Pending Action Items */}
-          <div className={styles.card} style={{ flex: 1 }}>
-            <div className={styles.cardTitle}>Pending Approvals</div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              {[
-                { msg: 'Approve allocation for INV-9002', time: '10m ago' },
-                { msg: 'Review settlement offer (Case #22)', time: '1h ago' },
-                { msg: 'Update SOP: Compliance v2', time: '3h ago' },
-              ].map((item, i) => (
-                <div key={i} style={{
-                  padding: '12px',
-                  background: '#F9FAFB',
-                  borderRadius: '8px',
-                  borderLeft: '4px solid var(--secondary)',
-                  fontSize: '0.9rem'
-                }}>
-                  <div style={{ fontWeight: 500 }}>{item.msg}</div>
-                  <div style={{ fontSize: '0.75rem', color: '#9CA3AF', marginTop: 4 }}>{item.time}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-
         </div>
       </div>
     </div>

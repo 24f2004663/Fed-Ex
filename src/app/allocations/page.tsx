@@ -51,7 +51,7 @@ export default function AllocationsPage() {
                 confirmText="Proceed with Allocation"
                 type="warning"
             >
-                <p><strong>System will verify compliance for 542 cases before allocation.</strong></p>
+                <p><strong>System will verify compliance for {filteredCases.length} cases before allocation.</strong></p>
                 <ul style={{ marginTop: 12, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 8 }}>
                     <li>✅ Check 1: Debt Verification (Passed)</li>
                     <li>✅ Check 2: Customer Cool-off Period (Passed)</li>
