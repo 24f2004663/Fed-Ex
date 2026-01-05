@@ -3,25 +3,18 @@
 import React, { useState } from 'react';
 import { Play, CheckCircle, BarChart2, Filter } from 'lucide-react';
 import styles from './page.module.css';
-
 import Modal from '@/components/Modal';
+import { useData } from '@/context/DataContext';
 
 export default function AllocationsPage() {
+    const { cases, currentDataset } = useData();
     const [isAllocating, setIsAllocating] = useState(false);
     const [filterType, setFilterType] = useState('all');
     const [showSopModal, setShowSopModal] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
 
-    const allCases = [
-        { id: 'C-1023', name: 'Acme Logistics', amount: 54000, amountStr: '$54,000', days: 45, score: 92, rec: 'Premium Agency (Alpha)' },
-        { id: 'C-1045', name: 'Beta Shipping', amount: 12500, amountStr: '$12,500', days: 62, score: 78, rec: 'Standard Agency' },
-        { id: 'C-1102', name: 'Delta Freight', amount: 8200, amountStr: '$8,200', days: 31, score: 88, rec: 'Internal Retention' },
-        { id: 'C-1155', name: 'Echo Trans', amount: 23100, amountStr: '$23,100', days: 95, score: 45, rec: 'Legal Escalation' },
-        { id: 'C-1201', name: 'Foxtrot Air', amount: 150000, amountStr: '$150,000', days: 28, score: 96, rec: 'Premium Agency (Alpha)' },
-    ];
-
     // Logic for Filtering
-    const filteredCases = allCases.filter(c => {
+    const filteredCases = cases.filter(c => {
         if (filterType === 'all') return true;
         if (filterType === 'high') return c.amount > 10000;
         if (filterType === 'risk') return c.score < 50;
@@ -40,6 +33,15 @@ export default function AllocationsPage() {
             setShowSuccessModal(true);
         }, 1500);
     };
+
+    if (currentDataset === 'empty') {
+        return (
+            <div className="animate-fade-in" style={{ padding: 40, textAlign: 'center', background: 'white', borderRadius: 12, marginTop: 20 }}>
+                <h2 style={{ color: 'var(--text-dark)', marginBottom: 8 }}>No Data Loaded</h2>
+                <p style={{ color: 'var(--text-muted)' }}>Use the controls in the sidebar to load a dataset first.</p>
+            </div>
+        );
+    }
 
     return (
         <div className={styles.container}>

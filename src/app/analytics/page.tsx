@@ -2,18 +2,17 @@
 
 import React, { useState } from 'react';
 import { PieChart, TrendingUp, CheckCircle, Database } from 'lucide-react';
+import { useData } from '@/context/DataContext';
 
 export default function AnalyticsPage() {
-    const [isConnected, setIsConnected] = useState(false);
-    const [isConnecting, setIsConnecting] = useState(false);
+    const { currentDataset, loadData, isLoading } = useData();
+
+    // effectiveConnected logic: if dataset is not empty, we are 'connected'
+    const isConnected = currentDataset !== 'empty';
 
     const handleConnect = () => {
-        setIsConnecting(true);
-        // Simulate API connection delay
-        setTimeout(() => {
-            setIsConnecting(false);
-            setIsConnected(true);
-        }, 1500);
+        // Since the user is on Analytics page, let's load Set 1 as default 'Connect' action
+        loadData('set1');
     };
 
     return (
@@ -45,9 +44,9 @@ export default function AnalyticsPage() {
                     <button
                         className="btn btn-primary"
                         onClick={handleConnect}
-                        disabled={isConnecting}
+                        disabled={isLoading}
                     >
-                        {isConnecting ? 'Connecting...' : 'Connect Data Source'}
+                        {isLoading ? 'Connecting...' : 'Connect Data Source'}
                     </button>
                 </div>
             ) : (
